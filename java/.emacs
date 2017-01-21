@@ -1,3 +1,14 @@
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+
+;; enable neotree
+(global-set-key [f8] 'neotree-toggle)
+
+;; enable auto-complete
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/elpa/auto-complete-20161029.643/dict")
+(ac-config-default)
 
 ;; Stop Emacs from losing undo information by
 ;; setting very high limits for undo buffers
@@ -54,10 +65,12 @@
 (define-key global-map "\e^" 'captilize-word)
 (define-key global-map "\e." 'fill-paragraph)
 (define-key global-map "\e " (lambda () (interactive) (push-mark)))
-
-(global-set-key (kbd "C-/") 'comment-or-uncomment-region)
-
+(global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 (delete-selection-mode 1)
+
+; Window
+(global-set-key (kbd "C-c s") 'shrink-window)
+(global-set-key (kbd "C-c e") 'enlarge-window)
 
 ;Search
 (global-set-key (kbd "C-c o") 'occur)
@@ -196,3 +209,14 @@
   (if (find-project-directory) (compile my-makescript))
   (other-window 1))
 (define-key global-map "\em" 'make-without-asking)
+
+(defun eshell-clear-buffer ()
+  "Clear terminal"
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(add-hook 'eshell-mode-hook
+          '(lambda() (local-set-key (kbd "C-l")
+                                    'eshell-clear-buffer)))
